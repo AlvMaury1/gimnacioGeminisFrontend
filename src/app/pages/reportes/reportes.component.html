@@ -1,0 +1,130 @@
+<div class="reportes-wrapper">
+  <h2>Reportes</h2>
+
+  <mat-tab-group>
+
+    <mat-tab label="Membresías">
+      <mat-card class="tab-card">
+        <mat-card-header><mat-card-title>Reporte de Membresías</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="membresiaForm" class="filter-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha desde</mat-label>
+              <input matInput [matDatepicker]="pickerMem1" formControlName="fechaDesde">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerMem1"></mat-datepicker-toggle>
+              <mat-datepicker #pickerMem1></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha hasta</mat-label>
+              <input matInput [matDatepicker]="pickerMem2" formControlName="fechaHasta"
+                [min]="membresiaForm.get('fechaDesde')?.value">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerMem2"></mat-datepicker-toggle>
+              <mat-datepicker #pickerMem2></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Estado</mat-label>
+              <mat-select formControlName="estado">
+                <mat-option value="">Todos</mat-option>
+                @for (e of estados; track e) {
+                  <mat-option [value]="e">{{ e }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </form>
+          @if (membresiaForm.hasError('dateRangeInvalid')) {
+            <p class="date-error">La fecha "desde" no puede ser mayor a la fecha "hasta".</p>
+          }
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary"
+            [disabled]="membresiaForm.hasError('dateRangeInvalid') || loadingMap['membresias']"
+            (click)="descargarMembresias()">
+            <mat-icon>picture_as_pdf</mat-icon>
+            {{ loadingMap['membresias'] ? 'Generando...' : 'Descargar PDF' }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Ventas">
+      <mat-card class="tab-card">
+        <mat-card-header><mat-card-title>Reporte de Ventas</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="ventasForm" class="filter-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha desde</mat-label>
+              <input matInput [matDatepicker]="pickerV1" formControlName="fechaDesde">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerV1"></mat-datepicker-toggle>
+              <mat-datepicker #pickerV1></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha hasta</mat-label>
+              <input matInput [matDatepicker]="pickerV2" formControlName="fechaHasta"
+                [min]="ventasForm.get('fechaDesde')?.value">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerV2"></mat-datepicker-toggle>
+              <mat-datepicker #pickerV2></mat-datepicker>
+            </mat-form-field>
+          </form>
+          @if (ventasForm.hasError('dateRangeInvalid')) {
+            <p class="date-error">La fecha "desde" no puede ser mayor a la fecha "hasta".</p>
+          }
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary"
+            [disabled]="ventasForm.hasError('dateRangeInvalid')"
+            (click)="descargarVentas()">
+            <mat-icon>picture_as_pdf</mat-icon> Descargar PDF
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Inventario">
+      <mat-card class="tab-card">
+        <mat-card-header><mat-card-title>Reporte de Inventario</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <p>Genera el reporte con el stock actual de todos los productos.</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="descargarInventario()">
+            <mat-icon>picture_as_pdf</mat-icon> Descargar PDF
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Log de Acceso">
+      <mat-card class="tab-card">
+        <mat-card-header><mat-card-title>Reporte de Log de Acceso</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="logForm" class="filter-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha desde</mat-label>
+              <input matInput [matDatepicker]="pickerL1" formControlName="fechaDesde">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerL1"></mat-datepicker-toggle>
+              <mat-datepicker #pickerL1></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha hasta</mat-label>
+              <input matInput [matDatepicker]="pickerL2" formControlName="fechaHasta"
+                [min]="logForm.get('fechaDesde')?.value">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerL2"></mat-datepicker-toggle>
+              <mat-datepicker #pickerL2></mat-datepicker>
+            </mat-form-field>
+          </form>
+          @if (logForm.hasError('dateRangeInvalid')) {
+            <p class="date-error">La fecha "desde" no puede ser mayor a la fecha "hasta".</p>
+          }
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary"
+            [disabled]="logForm.hasError('dateRangeInvalid')"
+            (click)="descargarLog()">
+            <mat-icon>picture_as_pdf</mat-icon> Descargar PDF
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>

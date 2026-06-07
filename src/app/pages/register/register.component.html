@@ -1,0 +1,73 @@
+<mat-card class="register-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon class="logo-icon">person_add</mat-icon>
+      Registrar Usuario
+    </mat-card-title>
+    <mat-card-subtitle>Solo el ADMIN puede crear nuevos usuarios</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput formControlName="email" type="email">
+        <mat-icon matSuffix>email</mat-icon>
+        @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+          <mat-error>Correo inválido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'">
+        <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
+          <mat-error>Mínimo 8 caracteres</mat-error>
+        }
+      </mat-form-field>
+
+      @if (form.get('password')?.value) {
+        <div class="strength-wrapper">
+          <div class="strength-bar">
+            <div class="segment" [class.active]="getStrength()" [class.debil]="getStrength()==='debil'" [class.intermedio]="getStrength()==='intermedio'" [class.fuerte]="getStrength()==='fuerte'"></div>
+            <div class="segment" [class.active]="getStrength()==='intermedio'||getStrength()==='fuerte'" [class.intermedio]="getStrength()==='intermedio'" [class.fuerte]="getStrength()==='fuerte'"></div>
+            <div class="segment" [class.active]="getStrength()==='fuerte'" [class.fuerte]="getStrength()==='fuerte'"></div>
+          </div>
+          <span class="strength-label" [class]="getStrength()">{{ getStrengthLabel() }}</span>
+        </div>
+      }
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirmar contraseña</mat-label>
+        <input matInput formControlName="confirmPassword" [type]="hideConfirm ? 'password' : 'text'">
+        <button mat-icon-button matSuffix type="button" (click)="hideConfirm = !hideConfirm">
+          <mat-icon>{{ hideConfirm ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (form.hasError('passwordMismatch') && form.get('confirmPassword')?.touched) {
+          <mat-error>Las contraseñas no coinciden</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Rol</mat-label>
+        <mat-select formControlName="rol">
+          @for (rol of roles; track rol) {
+            <mat-option [value]="rol">{{ rol }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" class="full-width submit-btn"
+        type="submit" [disabled]="loading || form.invalid || getStrength() === 'debil'">
+        @if (loading) {
+          <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+          Crear Usuario
+        }
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,112 @@
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  background: #1a237e;
+  color: white;
+
+  .sidenav-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px;
+
+    .logo-icon {
+      width: 100%;
+      height: 100%;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+    }
+
+  }
+.sidenav-text
+{
+  color: rgba(255,255,255,0.85);
+}
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+
+    mat-icon { color: rgba(255,255,255,0.7); }
+
+    .user-email {
+      margin: 0;
+      font-size: 13px;
+      color: white;
+      word-break: break-all;
+    }
+
+    .user-rol {
+      margin: 0;
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  mat-nav-list {
+    flex: 1;
+    padding-top: 8px;
+
+    a {
+      color: rgba(255,255,255,0.85) !important;
+      border-radius: 0 24px 24px 0;
+      margin-right: 12px;
+
+      mat-icon { color: rgba(255,255,255,0.7); }
+
+      &.active-link {
+        background: rgba(255,255,255,0.15) !important;
+        color: white !important;
+        mat-icon { color: white; }
+      }
+
+      &:hover {
+        background: rgba(255,255,255,0.08) !important;
+      }
+    }
+  }
+
+  .sidenav-footer {
+    padding: 8px;
+
+    .logout-btn {
+      width: 100%;
+      color: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &:hover { color: white; }
+    }
+  }
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.content-wrapper {
+  padding: 24px;
+  flex: 1;
+}

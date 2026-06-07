@@ -1,0 +1,68 @@
+<div class="dashboard-wrapper">
+  <h2 class="page-title">Dashboard</h2>
+
+  @if (loading) {
+    <div class="spinner-center"><mat-spinner></mat-spinner></div>
+  }
+
+  @if (!loading && !esAdmin) {
+    <mat-card class="info-card">
+      <mat-card-content>
+        <mat-icon>lock</mat-icon>
+        <p>Solo el ADMIN puede ver las estadísticas completas.</p>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!loading && esAdmin) {
+    <div class="kpi-grid">
+      <mat-card class="kpi-card">
+        <mat-card-content>
+          <mat-icon color="primary">people</mat-icon>
+          <div class="kpi-value">{{ kpis.clientesActivos }}</div>
+          <div class="kpi-label">Clientes Activos</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="kpi-card">
+        <mat-card-content>
+          <mat-icon color="accent">card_membership</mat-icon>
+          <div class="kpi-value">{{ kpis.membresiasActivas }}</div>
+          <div class="kpi-label">Membresías Activas</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="kpi-card">
+        <mat-card-content>
+          <mat-icon style="color:#4caf50">attach_money</mat-icon>
+          <div class="kpi-value">Bs {{ kpis.ventasMes | number:'1.2-2' }}</div>
+          <div class="kpi-label">Ventas del Mes</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="kpi-card">
+        <mat-card-content>
+          <mat-icon style="color:#ff9800">build</mat-icon>
+          <div class="kpi-value">{{ kpis.equiposMantenimiento }}</div>
+          <div class="kpi-label">Equipos en Mantenimiento</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="charts-grid">
+      <mat-card class="chart-card">
+        <mat-card-header><mat-card-title>Membresías por Mes</mat-card-title></mat-card-header>
+        <mat-card-content><canvas #barChart></canvas></mat-card-content>
+      </mat-card>
+      <mat-card class="chart-card">
+        <mat-card-header><mat-card-title>Clientes por Plan</mat-card-title></mat-card-header>
+        <mat-card-content><canvas #pieChart></canvas></mat-card-content>
+      </mat-card>
+      <mat-card class="chart-card">
+        <mat-card-header><mat-card-title>Ingresos por Mes (Bs)</mat-card-title></mat-card-header>
+        <mat-card-content><canvas #lineChart></canvas></mat-card-content>
+      </mat-card>
+      <mat-card class="chart-card">
+        <mat-card-header><mat-card-title>Top 5 Productos</mat-card-title></mat-card-header>
+        <mat-card-content><canvas #hbarChart></canvas></mat-card-content>
+      </mat-card>
+    </div>
+  }
+</div>

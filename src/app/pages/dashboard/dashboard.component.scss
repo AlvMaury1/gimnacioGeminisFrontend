@@ -1,0 +1,45 @@
+.dashboard-wrapper { padding: 8px; }
+.page-title { margin: 0 0 24px; font-size: 24px; font-weight: 600; }
+.spinner-center { display: flex; justify-content: center; padding: 60px; }
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  text-align: center;
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 24px 16px;
+    mat-icon { font-size: 36px; width: 36px; height: 36px; }
+  }
+  .kpi-value { font-size: 28px; font-weight: 700; }
+  .kpi-label { font-size: 13px; color: #666; }
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 16px;
+}
+
+.chart-card {
+  mat-card-content { padding: 16px; }
+}
+
+.info-card {
+  max-width: 400px;
+  mat-card-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: #555;
+  }
+}

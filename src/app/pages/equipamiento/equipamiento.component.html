@@ -1,0 +1,128 @@
+<div class="page-wrapper">
+  <h2>Equipamiento</h2>
+
+  <mat-tab-group>
+
+    <!-- ── TAB EQUIPOS ─────────────────────────────────────────── -->
+    <mat-tab label="Equipos">
+      <div class="tab-content">
+        <div class="tab-header">
+          <button mat-raised-button color="primary" (click)="abrirEquipo()">
+            <mat-icon>add</mat-icon> Nuevo Equipo
+          </button>
+        </div>
+
+        @if (loadingEq) { <mat-spinner diameter="40" class="spinner"></mat-spinner> }
+        @if (!loadingEq) {
+          <table mat-table [dataSource]="equipos" class="full-width">
+
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let e">
+                <strong>{{ e.nombre }}</strong>
+                @if (e.variante) { <br><small class="muted">{{ e.variante }}</small> }
+                @if (e.alerta_mantenimiento) {
+                  <mat-icon class="alerta-icon" matTooltip="Mantenimiento próximo">warning</mat-icon>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numero_serie">
+              <th mat-header-cell *matHeaderCellDef>N° Serie</th>
+              <td mat-cell *matCellDef="let e">{{ e.numero_serie || '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="ubicacion">
+              <th mat-header-cell *matHeaderCellDef>Ubicación</th>
+              <td mat-cell *matCellDef="let e">{{ e.ubicacion || '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="cantidad">
+              <th mat-header-cell *matHeaderCellDef>Disponible / Total</th>
+              <td mat-cell *matCellDef="let e">
+                <strong>{{ e.cantidad_disponible }}</strong> / {{ e.cantidad_total }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let e">
+                <mat-chip [color]="estadoColor(e.estado)" highlighted>{{ e.estado }}</mat-chip>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let e">
+                <button mat-icon-button matTooltip="Editar" (click)="abrirEquipo(e)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button matTooltip="Registrar movimiento" color="accent" (click)="abrirMovimiento(e)">
+                  <mat-icon>swap_horiz</mat-icon>
+                </button>
+                @if (e.estado !== 'BAJA') {
+                  <button mat-icon-button matTooltip="Dar de baja" color="warn" (click)="darDeBaja(e)">
+                    <mat-icon>block</mat-icon>
+                  </button>
+                }
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="equiposCols"></tr>
+            <tr mat-row *matRowDef="let row; columns: equiposCols;" [class.baja]="row.estado === 'BAJA'"></tr>
+          </table>
+
+          <mat-paginator [length]="totalEquipos" [pageSize]="limitEq" [pageSizeOptions]="[5,10,25]" (page)="onPageEq($event)"></mat-paginator>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- ── TAB MOVIMIENTOS ────────────────────────────────────── -->
+    <mat-tab label="Historial de Movimientos">
+      <div class="tab-content">
+        @if (loadingMov) { <mat-spinner diameter="40" class="spinner"></mat-spinner> }
+        @if (!loadingMov) {
+          <table mat-table [dataSource]="movimientos" class="full-width">
+
+            <ng-container matColumnDef="equipo">
+              <th mat-header-cell *matHeaderCellDef>Equipo</th>
+              <td mat-cell *matCellDef="let m">{{ m.equipo?.nombre || '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="tipo">
+              <th mat-header-cell *matHeaderCellDef>Tipo</th>
+              <td mat-cell *matCellDef="let m">
+                <mat-chip [color]="m.tipo === 'RETIRO' ? 'warn' : 'primary'" highlighted>{{ m.tipo }}</mat-chip>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cantidad">
+              <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+              <td mat-cell *matCellDef="let m">{{ m.cantidad }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="motivo">
+              <th mat-header-cell *matHeaderCellDef>Motivo</th>
+              <td mat-cell *matCellDef="let m">{{ m.motivo || '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha_estimada_retorno">
+              <th mat-header-cell *matHeaderCellDef>Retorno estimado</th>
+              <td mat-cell *matCellDef="let m">{{ m.fecha_estimada_retorno ? (m.fecha_estimada_retorno | date:'dd/MM/yyyy') : '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha">
+              <th mat-header-cell *matHeaderCellDef>Fecha</th>
+              <td mat-cell *matCellDef="let m">{{ m.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="movCols"></tr>
+            <tr mat-row *matRowDef="let row; columns: movCols;"></tr>
+          </table>
+
+          <mat-paginator [length]="totalMov" [pageSize]="limitMov" [pageSizeOptions]="[5,10,25]" (page)="onPageMov($event)"></mat-paginator>
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

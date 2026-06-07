@@ -1,0 +1,8 @@
+.page-wrapper { padding: 8px; h2 { margin: 0 0 16px; font-size: 24px; font-weight: 600; } }
+.tab-content { padding: 16px 0; }
+.tab-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+.search-field { min-width: 260px; }
+.full-width { width: 100%; }
+.spinner { margin: 40px auto; display: block; }
+.muted { color: #888; }
+tr.inactivo td { opacity: 0.5; }

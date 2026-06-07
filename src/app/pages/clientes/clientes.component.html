@@ -1,0 +1,82 @@
+<div class="clientes-wrapper">
+  <div class="page-header">
+    <h2>Clientes</h2>
+    <button mat-raised-button color="primary" (click)="openDialog()">
+      <mat-icon>add</mat-icon> Nuevo Cliente
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar por nombre, apellido o email</mat-label>
+        <input matInput [formControl]="searchCtrl">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      @if (loading) {
+        <div class="spinner-center"><mat-spinner diameter="40"></mat-spinner></div>
+      }
+
+      @if (!loading) {
+        <table mat-table [dataSource]="clientes" class="full-width">
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let c">{{ c.nombre }}</td>
+          </ng-container>
+          <ng-container matColumnDef="apellido">
+            <th mat-header-cell *matHeaderCellDef>Apellido</th>
+            <td mat-cell *matCellDef="let c">{{ c.apellido }}</td>
+          </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let c">{{ c.email }}</td>
+          </ng-container>
+          <ng-container matColumnDef="telefono">
+            <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+            <td mat-cell *matCellDef="let c">{{ c.telefono || '-' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let c">
+              @if (!c.deletedAt) {
+                <mat-chip color="primary" highlighted>Activo</mat-chip>
+              } @else {
+                <mat-chip>Inactivo</mat-chip>
+              }
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let c">
+              <button mat-icon-button matTooltip="Editar" (click)="openDialog(c)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              @if (!c.deletedAt) {
+                <button mat-icon-button matTooltip="Desactivar" color="warn" (click)="toggleEstado(c)">
+                  <mat-icon>person_off</mat-icon>
+                </button>
+              }
+              @if (c.deletedAt && esAdmin) {
+                <button mat-icon-button matTooltip="Reactivar" color="primary" (click)="toggleEstado(c)">
+                  <mat-icon>person</mat-icon>
+                </button>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+              [class.inactivo]="row.deletedAt"></tr>
+        </table>
+
+        <mat-paginator
+          [length]="total"
+          [pageSize]="limit"
+          [pageSizeOptions]="[5, 10, 25]"
+          (page)="onPageChange($event)">
+        </mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,120 @@
+<div class="page-wrapper">
+  <h2>Membresías</h2>
+
+  <mat-tab-group>
+
+    <!-- ── TAB PLANES ─────────────────────────────────────────── -->
+    <mat-tab label="Planes de Membresía">
+      <div class="tab-content">
+        @if (esAdmin) {
+          <div class="tab-header">
+            <button mat-raised-button color="primary" (click)="abrirDialogPlan()">
+              <mat-icon>add</mat-icon> Nuevo Plan
+            </button>
+          </div>
+        }
+        @if (loadingPlanes) { <mat-spinner diameter="40" class="spinner"></mat-spinner> }
+        @if (!loadingPlanes) {
+          <table mat-table [dataSource]="planes" class="full-width">
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let p">{{ p.nombre }}</td>
+            </ng-container>
+            <ng-container matColumnDef="duracion_dias">
+              <th mat-header-cell *matHeaderCellDef>Duración</th>
+              <td mat-cell *matCellDef="let p">{{ p.duracion_dias }} días</td>
+            </ng-container>
+            <ng-container matColumnDef="precio">
+              <th mat-header-cell *matHeaderCellDef>Precio</th>
+              <td mat-cell *matCellDef="let p">Bs. {{ p.precio }}</td>
+            </ng-container>
+            <ng-container matColumnDef="activo">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let p">
+                @if (p.activo) { <mat-chip color="primary" highlighted>Activo</mat-chip> }
+                @else { <mat-chip>Inactivo</mat-chip> }
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let p">
+                @if (esAdmin) {
+                  <button mat-icon-button matTooltip="Editar" (click)="abrirDialogPlan(p)"><mat-icon>edit</mat-icon></button>
+                  @if (p.activo) {
+                    <button mat-icon-button matTooltip="Desactivar" color="warn" (click)="desactivarPlan(p)"><mat-icon>block</mat-icon></button>
+                  }
+                }
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="planesCols"></tr>
+            <tr mat-row *matRowDef="let row; columns: planesCols;" [class.inactivo]="!row.activo"></tr>
+          </table>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- ── TAB MEMBRESÍAS ──────────────────────────────────────── -->
+    <mat-tab label="Membresías">
+      <div class="tab-content">
+        <div class="tab-header">
+          <mat-form-field appearance="outline" class="filter-select">
+            <mat-label>Filtrar por estado</mat-label>
+            <mat-select [(value)]="filtroEstado" (selectionChange)="loadMembresias(1)">
+              @for (e of estados; track e) {
+                <mat-option [value]="e">{{ e || 'Todos' }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="abrirDialogMembresia()">
+            <mat-icon>add</mat-icon> Nueva Membresía
+          </button>
+        </div>
+
+        @if (loadingMemb) { <mat-spinner diameter="40" class="spinner"></mat-spinner> }
+        @if (!loadingMemb) {
+          <table mat-table [dataSource]="membresias" class="full-width">
+            <ng-container matColumnDef="cliente">
+              <th mat-header-cell *matHeaderCellDef>Cliente</th>
+              <td mat-cell *matCellDef="let m">{{ m.cliente?.nombre }} {{ m.cliente?.apellido }}</td>
+            </ng-container>
+            <ng-container matColumnDef="plan">
+              <th mat-header-cell *matHeaderCellDef>Plan</th>
+              <td mat-cell *matCellDef="let m">{{ m.plan?.nombre }}</td>
+            </ng-container>
+            <ng-container matColumnDef="fecha_inicio">
+              <th mat-header-cell *matHeaderCellDef>Inicio</th>
+              <td mat-cell *matCellDef="let m">{{ m.fecha_inicio | date:'dd/MM/yyyy' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="fecha_fin">
+              <th mat-header-cell *matHeaderCellDef>Fin</th>
+              <td mat-cell *matCellDef="let m">{{ m.fecha_fin | date:'dd/MM/yyyy' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="precio_pagado">
+              <th mat-header-cell *matHeaderCellDef>Precio</th>
+              <td mat-cell *matCellDef="let m">Bs. {{ m.precio_pagado }}</td>
+            </ng-container>
+            <ng-container matColumnDef="estado">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let m">
+                <mat-chip [color]="estadoColor(m.estado)" [highlighted]="m.estado==='ACTIVA'">{{ m.estado }}</mat-chip>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let m">
+                @if (m.estado === 'ACTIVA') {
+                  <button mat-icon-button matTooltip="Cancelar" color="warn" (click)="cancelarMembresia(m.id)">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                }
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="membrCols"></tr>
+            <tr mat-row *matRowDef="let row; columns: membrCols;"></tr>
+          </table>
+          <mat-paginator [length]="totalMemb" [pageSize]="limitMemb" [pageSizeOptions]="[5,10,25]" (page)="onPageMemb($event)"></mat-paginator>
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
